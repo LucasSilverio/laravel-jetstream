@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Livewire\ShowClients;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,6 +18,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/clients', [ClientController::class, 'index'])->name('clients');
+//    Route::get('/clients', [ClientController::class, 'index'])->name('clients');
+    Route::get('/clients', ShowClients::class)->name('clients');
 
 });
