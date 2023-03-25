@@ -7,12 +7,6 @@ use Livewire\Component;
 
 class ShowClients extends Component
 {
-    /*protected $client;
-    
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }*/
 
     public $showModal = false;
     public $showDetalhes = false;
@@ -22,6 +16,8 @@ class ShowClients extends Component
     public $document = "";
     public $phone = "";
     public $sex = "";
+    public $client = "";
+    public $id_client = "";
 
     public function showModal($hide = false)
     {
@@ -36,6 +32,16 @@ class ShowClients extends Component
     public function showDetalhes($id, $hide = false)
     {
         if (!$hide){
+
+            $this->client = Client::findOrFail($id);
+
+            $this->firstname = $this->client->firstname;
+            $this->lastname = $this->client->lastname;
+            $this->datebirth = $this->client->datebirth;
+            $this->phone = $this->client->phone;
+            $this->sex = $this->client->sex;
+            $this->id_client = $id;
+            
             $this->showDetalhes = true;
         }else {
             $this->showDetalhes = false;
@@ -45,7 +51,6 @@ class ShowClients extends Component
 
     public function render()
     {
-        //$clients = $this->client->get();
         $clients = Client::get();
 
         return view('livewire.show-clients', compact('clients'));
@@ -65,6 +70,24 @@ class ShowClients extends Component
         session()->flash('message', 'Registro adicionado com sucesso!');
 
         $this->showModal(true);
+        $this->clearForm();
+    }
+
+    public function update()
+    {
+        Client::updateOrCreate(['id' => $this->id_client],
+        [
+            'firstname' => $this->firstname,
+            'lastname'  => $this->lastname,
+            'datebirth' => $this->datebirth,
+            'phone'     => $this->phone,
+            'sex'       => $this->sex
+        ]);
+
+        session()->flash('message', 'Registro editado com sucesso!');
+
+        $this->showDetalhes($this->id_client, true);
+
         $this->clearForm();
     }
 
