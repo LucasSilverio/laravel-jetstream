@@ -19,6 +19,11 @@ class ShowClients extends Component
     public $client = "";
     public $id_client = "";
 
+    protected $rules = [
+        'firstname' => 'required|min:3|max:200',
+        'lastname' => 'required|min:3|max:200',        
+    ];
+
     public function showModal($hide = false)
     {
         if (!$hide){
@@ -58,6 +63,8 @@ class ShowClients extends Component
 
     public function create()
     {
+        $this->validate();
+
         Client::create([
             'firstname' => $this->firstname,
             'lastname'  => $this->lastname,
@@ -75,6 +82,8 @@ class ShowClients extends Component
 
     public function update()
     {
+        $this->validate();
+        
         Client::updateOrCreate(['id' => $this->id_client],
         [
             'firstname' => $this->firstname,
