@@ -6,9 +6,11 @@ use App\Http\Requests\CreateSheduleRequest;
 use App\Models\Event;
 use Livewire\Component;
 use App\Models\Scheduling;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ShowSchedules extends Component
 {
+    use LivewireAlert;
     public $showModalEvent = false;
     public $showModalEdit = false;
     public $nome = "Lucas";
@@ -18,6 +20,7 @@ class ShowSchedules extends Component
     public $description = "";
     public $user_id = "";
     public $event_id = "";
+    public $confirmDelete = "";
     public $events = [];
 
     protected $rules = [
@@ -53,6 +56,7 @@ class ShowSchedules extends Component
             $event->user_id = \Auth::id();
 
             $event->save();
+
         } else {
             Event::create([
                 'title' => $this->title,
@@ -63,8 +67,11 @@ class ShowSchedules extends Component
             ]);
         }
 
-
-        session()->flash('message', 'Registro adicionado com sucesso!');
+        $this->alert('success', 'Registrado com sucesso!', [
+            'timer' => 3000,
+            'timerProgressBar' => true
+        ]);
+        //session()->flash('message', 'Registro adicionado com sucesso!');
 
         $this->showModalEvent = false;
         $this->clearInputs();
@@ -80,7 +87,29 @@ class ShowSchedules extends Component
         $this->end = "";
         $this->description = "";
         $this->user_id = "";
-        $this->id = "";
+        $this->event_id = "";
+        $this->confirmDelete = "";
+    }
+
+    public function confirmDelete()
+    {
+        $this->confirmDelete = $this->event_id;
+    }
+
+    public function delete()
+    {
+        $event = Event::FindOrFail($this->event_id);
+
+        $event->delete();
+        $this->clearInputs();
+        $this->showModalEvent = false;
+
+        $this->dispatchBrowserEvent('refreshEventsCalendar', ['refresh' => true]);
+
+        $this->alert('success', 'Agendamento removido com sucesso!', [
+            'timer' => 3000,
+            'timerProgressBar' => true
+        ]);
     }
 
     public function render()
