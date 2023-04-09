@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Http\Requests\CreateSheduleRequest;
 use App\Models\Event;
+use App\Models\Client;
 use Livewire\Component;
 use App\Models\Scheduling;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -21,17 +22,38 @@ class ShowSchedules extends Component
     public $user_id = "";
     public $event_id = "";
     public $confirmDelete = "";
+    public $client_id = "";
+    public $client_name = "";
     public $events = [];
+    public $clients = [];
+    public $listeners = ['clienteSelecionado'];
 
     protected $rules = [
-        'title' => 'required|min:3|max:200',
-        //'start' => 'required',
-        //'end'   => 'required'
+        'title' => 'min:3|max:200|nullable',
+        'client_id' => 'required|numeric',
+        'start' => 'required|date',
+        'end'   => 'required|date',
+        'description'   => 'string|nullable'
     ];
 
     public function showModalEvent()
     {
+        $this->getClient();
        $this->showModalEvent = true;
+    }
+
+    public function getClient()
+    {
+        if ($this->client_id != '') {
+            $client = Client::FindOrFail($this->client_id);
+            $this->client_name = $client->firstname . ' ' . $client->lastname;
+        }
+
+    }
+
+    public function clienteSelecionado($id)
+    {
+        $this->client_id = $id;
     }
 
     public function showModalEdit()
@@ -47,6 +69,7 @@ class ShowSchedules extends Component
     public function createEvent()
     {
         $this->validate();
+
         if ($this->event_id != "") {
             $event = Event::find($this->event_id);
             $event->title = $this->title;
@@ -58,12 +81,17 @@ class ShowSchedules extends Component
             $event->save();
 
         } else {
+            if (strlen($this->title) == 0) {
+                $client = Client::findOrFail($this->client_id);
+            }
+
             Event::create([
-                'title' => $this->title,
-                'start'  => $this->start,
-                'end' => $this->end,
-                'description'  => $this->description,
-                'user_id'   => \Auth::id()
+                'title'         => $this->title != '' ? $this->title : $client->firstname . ' ' . $client->lastname,
+                'client_id'     => $this->client_id,
+                'start'         => $this->start,
+                'end'           => $this->end,
+                'description'   => $this->description,
+                'user_id'       => \Auth::id(),
             ]);
         }
 
@@ -115,8 +143,10 @@ class ShowSchedules extends Component
     public function render()
     {
         $events = Event::get();
+        $clients = Client::get();
 
         $this->events = json_encode($events);
+        $this->clients = $clients;
 
         return view('livewire.shedules.show-schedules');
     }

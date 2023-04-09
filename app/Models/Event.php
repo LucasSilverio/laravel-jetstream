@@ -17,6 +17,7 @@ class Event extends Model
         'is_all_day',
         'title',
         'description',
-        'event_id'
+        'event_id',
+        'client_id'
     ];
 }

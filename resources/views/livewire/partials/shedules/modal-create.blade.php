@@ -5,30 +5,46 @@
         </div>
 
         <div class="mt-4 text-sm text-gray-600">
-            <form method="POST" wire:submit.prevent="createEvent">
+            <form method="POST" wire:submit.prevent="createEvent" autocomplete="false">
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full px-3 mb-6 md:mb-0">
                       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
                         Título
                       </label>
-                      <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Jane" wire:model="title" name="title">
+                      <input class="appearance-none block w-full bg-gray-200 text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Defina um título ou deixe em branco" wire:model="title" name="title">
                       @error('title')
                         {{ $message }}
                       @enderror
                     </div>
                 </div>
 
+                @if($client_id == '')
+                    @livewire('contact-search-bar', ['client_id' => $client_id])
+                    @error('client_id')
+                        <p class="-mt-8 mb-3">Necessário informar o paciente</p>
+                    @enderror
+                @else
+                    <div class="flex flex-wrap -mx-3 mb-6">
+                        <div class="w-full px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                                Paciente
+                            </label>
+                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" wire:model="client_name" disabled>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-inicial">Hora Inicial</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-inicial" type="datetime-local" wire:model="start">
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-inicial" type="datetime-local" wire:model="start">
                         @error('start')
                             {{ $message }}
                         @enderror
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-final">Hora Final</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-inicial" type="datetime-local" wire:model="end">
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-inicial" type="datetime-local" wire:model="end">
                         @error('end')
                             {{ $message }}
                         @enderror
@@ -38,7 +54,7 @@
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full px-3 mb-6 md:mb-0">
                         <label for="">Descrição</label>
-                        <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" wire:model="description"></textarea>
+                        <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" wire:model="description"></textarea>
                     </div>
                 </div>
 

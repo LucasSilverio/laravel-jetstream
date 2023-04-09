@@ -39,20 +39,23 @@
         },
         //events: JSON.parse(data),
         dateClick: function (info) {
+            console.log(info);
             @this.title = "";
             @this.event_id = "";
-            @this.start = "";
-            @this.end = "";
+            @this.start = dayjs(info.dateStr).format('YYYY-MM-DD HH:mm:ss');
+            @this.end = dayjs(info.dateStr).format('YYYY-MM-DD HH:mm:ss');
             @this.description = "";
             @this.call('showModalEvent');
         },
         eventClick: function({event}) {
             console.log(event);
+            console.log(event.extendedProps.client_id);
             @this.title = event.title;
             @this.event_id = event.id;
             @this.start = dayjs(event.start).format('YYYY-MM-DD HH:mm:ss');
             @this.end = dayjs(event.end).format('YYYY-MM-DD HH:mm:ss');
             @this.description = event.description;
+            @this.client_id = event.extendedProps.client_id;
             @this.call('showModalEvent');
         }
 
