@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use App\Http\Requests\CreateSheduleRequest;
 use App\Models\Event;
 use App\Models\Client;
+use App\Models\Method;
+use App\Models\Finance;
 use Livewire\Component;
 use App\Models\Scheduling;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -26,7 +28,12 @@ class ShowSchedules extends Component
     public $client_name = "";
     public $events = [];
     public $clients = [];
-    public $listeners = ['clienteSelecionado'];
+    public $methods = [];
+    public $valor = 0;
+    public $method = "";
+    public $prazo = "";
+    public $status = "";
+    public $finance = null;
 
     protected $rules = [
         'title' => 'min:3|max:200|nullable',
@@ -34,6 +41,10 @@ class ShowSchedules extends Component
         'start' => 'required|date',
         'end'   => 'required|date',
         'description'   => 'string|nullable'
+    ];
+
+    protected $listeners = [
+        'clienteSelecionado'
     ];
 
     public function showModalEvent()
@@ -53,7 +64,7 @@ class ShowSchedules extends Component
 
     public function clienteSelecionado($id)
     {
-        $this->client_id = $id;
+       $this->client_id = $id;
     }
 
     public function showModalEdit()
@@ -77,6 +88,17 @@ class ShowSchedules extends Component
             $event->end = $this->end;
             $event->description = $this->description;
             $event->user_id = \Auth::id();
+
+            if ($this->valor != '' && $this->method != '') {
+                $event->status = 1;
+
+                Finance::create([
+                    'event_id'  => $this->event_id,
+                    'method_id' => $this->method,
+                    'value'     => $this->valor,
+                    'term'      =>  date('Y-m-d')
+                ]);
+            }
 
             $event->save();
 
@@ -144,9 +166,11 @@ class ShowSchedules extends Component
     {
         $events = Event::get();
         $clients = Client::get();
+        $methods = Method::get();
 
         $this->events = json_encode($events);
         $this->clients = $clients;
+        $this->methods = $methods;
 
         return view('livewire.shedules.show-schedules');
     }

@@ -39,12 +39,16 @@
         },
         //events: JSON.parse(data),
         dateClick: function (info) {
-            console.log(info);
             @this.title = "";
             @this.event_id = "";
             @this.start = dayjs(info.dateStr).format('YYYY-MM-DD HH:mm:ss');
             @this.end = dayjs(info.dateStr).format('YYYY-MM-DD HH:mm:ss');
             @this.description = "";
+            @this.client_id = "";
+            @this.status = "";
+            @this.method = '';
+            @this.valor = 0;
+            @this.finance = null;
             @this.call('showModalEvent');
         },
         eventClick: function({event}) {
@@ -56,6 +60,15 @@
             @this.end = dayjs(event.end).format('YYYY-MM-DD HH:mm:ss');
             @this.description = event.description;
             @this.client_id = event.extendedProps.client_id;
+            @this.status = event.extendedProps.status;
+            @this.finance = event.extendedProps.finance;
+            if(event.extendedProps.finance != null){
+                @this.method = event.extendedProps.finance.method_id;
+                @this.valor = event.extendedProps.finance.value;
+            }else{
+                @this.method = "";
+                @this.valor = "";
+            }
             @this.call('showModalEvent');
         }
 

@@ -21,13 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/events', [EventController::class, 'index'])->name("events");
 
-
 /*Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
-    
+
     Route::get('/events', [EventController::class, 'index'])->name("events");
 
 });*/

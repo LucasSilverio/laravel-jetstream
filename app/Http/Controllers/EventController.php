@@ -9,6 +9,7 @@ class EventController extends Controller
 {
     public function index()
     {
-        return Event::get();
+        $events = Event::with('finance')->get();
+        return $events;
     }
 }

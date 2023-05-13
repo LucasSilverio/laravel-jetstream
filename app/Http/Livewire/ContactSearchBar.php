@@ -38,6 +38,7 @@ class ContactSearchBar extends Component
             $this->query = $contact->firstname.' '.$contact->lastname;
             $this->client_id = $contact->id;
             $this->emitUp('clienteSelecionado', $id);
+           //$this->emitTo('ShowSchedules', 'clienteSelecionado', $id);
         }
 
         $this->contacts = [];
